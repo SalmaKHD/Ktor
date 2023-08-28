@@ -1,5 +1,6 @@
 package com.salmakhd
 
+import com.salmakhd.dao.DatabaseFactory
 import com.salmakhd.plugins.*
 import configureSerialization
 import io.ktor.server.application.*
@@ -18,6 +19,15 @@ fun main() {
 
 // this is specified as the entry point in "application.conf"
 fun Application.module() {
+    // for allowing the API to work nicely with browser clients
+//    install(CORS) {
+//        anyHost()
+//    }
+
+    // execute database configurations
+    DatabaseFactory.init()
+
+    // defines routing for User data
     configureRouting()
     configureSerialization()
     module1()
@@ -25,6 +35,7 @@ fun Application.module() {
 
 // create a module
 fun Application.module1() {
+    // routing defines endpoints and what happens when they are triggered
     routing {
         get("/module1") {
             call.respondText("Hello from module 1!")

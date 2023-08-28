@@ -10,4 +10,10 @@ data class User(
 )
 
 // must be stored in a database in fact
-val userStorage = mutableListOf<User>()
+val userStorage = mutableListOf<User>(
+    User(
+        id = "100",
+        name = "سلما",
+        number = "09128584364"
+    )
+)
