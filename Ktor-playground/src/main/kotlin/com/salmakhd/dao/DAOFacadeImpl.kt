@@ -45,10 +45,3 @@ class DAOFacadeImpl : DAOFacade {
         Articles.deleteWhere { Articles.id eq id } > 0
     }
 }
-
-val dao: DAOFacade = DAOFacadeImpl().apply {
-    runBlocking {
-        if(allArticles().isNotEmpty()) {
-            addNewArticle("The drive to develop!", "...it's what keeps me going.")        }
-    }
-}

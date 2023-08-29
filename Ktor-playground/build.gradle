@@ -43,4 +43,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
     implementation("com.h2database:h2:$h2_version")
 
+    // HikariCP library for database connection pooling
+    implementation("com.zaxxer:HikariCP:$hikaricp_version")
+    // Ehchache library for database connection caching
+    implementation("org.ehcache:ehcache:$ehcache_version")
+
 }

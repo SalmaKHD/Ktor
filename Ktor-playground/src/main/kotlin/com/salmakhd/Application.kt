@@ -25,7 +25,7 @@ fun Application.module() {
 //    }
 
     // execute database configurations
-    DatabaseFactory.init()
+    DatabaseFactory.init(environment.config)
 
     // defines routing for User data
     configureRouting()
