@@ -1,0 +1,33 @@
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.9.10'
+    id 'io.ktor.plugin' version '2.3.3'
+    id "org.jetbrains.kotlin.plugin.serialization" version "1.8.0"
+}
+
+group "com.salmakhd"
+version "0.0.1"
+mainClassName = "com.salmakhd.ApplicationKt"
+
+def isDevelopment = project.ext.has("development")
+applicationDefaultJvmArgs = ["-Dio.ktor.development=$isDevelopment"]
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+    implementation "ch.qos.logback:logback-classic:$logback_version"
+    implementation "io.ktor:ktor-server-core:$ktor_version"
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+
+    // for reading Json data
+    implementation("io.ktor:ktor-server-content-negotiation:$ktor_version")
+    testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+
+    implementation group: 'org.ktorm', name: 'ktorm-core', version: '3.6.0'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
+}
