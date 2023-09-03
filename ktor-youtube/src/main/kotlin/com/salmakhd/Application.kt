@@ -23,24 +23,17 @@ import java.io.File
 fun main() {
     // no need for a configuration file if this line is present
     embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
-        // before any endpoint call, a feature will be activated
-        // alternative approach: call module module directly here: module()
+        // before any endpoint call, a will be activated
+        // alternative approach: call module directly here: module()
         .start(wait = true) // starts the server
 }
 
 fun Application.module() {
+    // install a feature, allows converting Kotlin objects into json format and vice versa
     install(ContentNegotiation) {
         json()
     }
     configureRouting()
-
-    // connect to database
-    val database = Database.connect(
-        url = "jdbc:mysql://localhost:3306/notes", // 3306: port number, notes: database name,
-        driver = "com.mysql.cj.jdbc.Driver",
-        user = "root",
-        password = "1234" // should typically be retrieved from a config file stored on the server
-    )
 
     // insert a value into the database
     /*
@@ -49,6 +42,7 @@ fun Application.module() {
         set(it.note, "Study Ktor")
     }
      */
+    /*
 
     val notes = database
         .from(NoteEntity)
@@ -70,7 +64,10 @@ fun Application.module() {
     database.delete(NoteEntity) {
         it.id eq 1
     }
+
+     */
 }
+
 
 fun Route.homeRoute() {
     get("/") { // define home route

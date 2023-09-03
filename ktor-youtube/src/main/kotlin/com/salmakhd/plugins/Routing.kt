@@ -1,13 +1,11 @@
 package com.salmakhd.plugins
 
-import com.salmakhd.homeRoute
+import com.salmakhd.routing.authenticationRoutes
 import io.ktor.server.application.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import routing.notesRoutes
 
 // define configureRouting module
 fun Application.configureRouting() {
-    routing {
-        homeRoute()
-    }
+    notesRoutes()
+    authenticationRoutes()
 }
