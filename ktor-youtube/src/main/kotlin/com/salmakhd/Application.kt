@@ -1,7 +1,10 @@
 package com.salmakhd
 
-import com.salmakhd.entities.NoteEntity
 import com.salmakhd.plugins.*
+import com.salmakhd.utils.TokenManger
+import com.typesafe.config.ConfigFactory
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -9,14 +12,10 @@ import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.routing.Routing.Plugin.install
 import kotlinx.serialization.Serializable
-import java.io.Serial
 import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
+import io.ktor.server.config.*
 import io.ktor.server.plugins.contentnegotiation.*
-import kotlinx.coroutines.selects.select
-import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import java.io.File
 
@@ -29,11 +28,33 @@ fun main() {
 }
 
 fun Application.module() {
+    val config = HoconApplicationConfig(ConfigFactory.load())
+    val tokenManger = TokenManger(config)
+
+    install(Authentication) {
+        jwt{
+            verifier(tokenManger.verifyJWTToken())
+            realm = config.property("realm").getString()
+            validate {jwtCredential ->
+                if(jwtCredential.payload.getClaim("username").asString().isNotEmpty()) {
+                    JWTPrincipal(JWTCredential.payload)
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
     // install a feature, allows converting Kotlin objects into json format and vice versa
     install(ContentNegotiation) {
         json()
     }
+
     configureRouting()
+
+    // install jwt feature
+
+
 
     // insert a value into the database
     /*

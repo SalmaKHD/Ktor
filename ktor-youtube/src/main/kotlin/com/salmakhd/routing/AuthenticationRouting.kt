@@ -4,9 +4,13 @@ import com.salmakhd.model.NoteResponse
 import com.salmakhd.model.User
 import com.salmakhd.model.UserCredentials
 import com.salmakhd.model.UserEntity
+import com.salmakhd.utils.TokenManger
+import com.typesafe.config.ConfigFactory
 import db.DatabaseConnection
+import io.ktor.auth.jwt.*
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -15,6 +19,7 @@ import org.mindrot.jbcrypt.BCrypt
 
 fun Application.authenticationRoutes() {
     val db = DatabaseConnection.database
+    val tokenManger = TokenManger(HoconApplicationConfig((ConfigFactory.load())))
 
     routing {
         post("/register") {
@@ -102,10 +107,20 @@ fun Application.authenticationRoutes() {
                 return@post
             }
 
+            val token = tokenManger.generateJWTToken(user)
             call.respond(
                 HttpStatusCode.OK,
-                "User logged in successfully"
+                NoteResponse(success = true, data = token)
             )
+        }
+
+        authenticate {
+            get("/me") {
+                val principle = call.principle<JWTPrincipal>()
+                val username =  principle!!.payload.getClaim("username").toString()
+                val userId = principle!!.payload.getClaim("userId").toString()
+                call.respondText("Hello $username with id: $userId")
+            }
         }
     }
 }
